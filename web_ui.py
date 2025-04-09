@@ -1,4 +1,4 @@
-"""Web-based UI for the Advanced AI Book Generator"""
+"""Web-based UI for Agentic Author"""
 import os
 import json
 import threading
@@ -14,10 +14,10 @@ log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
 # Initialize Flask app
-app = Flask(__name__, 
+app = Flask(__name__,
             static_folder='web/static',
             template_folder='web/templates')
-app.config['SECRET_KEY'] = 'advanced-ai-book-generator'
+app.config['SECRET_KEY'] = 'agentic-author'
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Global variables to track generation state
@@ -55,7 +55,7 @@ def status():
 def start_generation():
     """Start the book generation process"""
     data = request.json
-    
+
     # Reset status
     generation_status["is_generating"] = True
     generation_status["current_step"] = "Initializing"
@@ -66,7 +66,7 @@ def start_generation():
     generation_status["outline"] = []
     generation_status["start_time"] = datetime.now().isoformat()
     generation_status["log_messages"] = []
-    
+
     # Log the start of generation
     add_log_message("Starting book generation with parameters:")
     add_log_message(f"- Provider: {data.get('provider', 'unknown')}")
@@ -74,10 +74,10 @@ def start_generation():
     add_log_message(f"- Chapters: {data.get('num_chapters', 0)}")
     add_log_message(f"- Min words per chapter: {data.get('min_chapter_length', 0)}")
     add_log_message(f"- Min scenes per chapter: {data.get('min_scenes', 0)}")
-    
+
     # Start generation in a separate thread
     threading.Thread(target=generate_book, args=(data,)).start()
-    
+
     return jsonify({"status": "started"})
 
 @app.route('/api/stop_generation', methods=['POST'])
@@ -104,7 +104,7 @@ def get_book_list():
                 })
     except Exception as e:
         return jsonify({"error": str(e), "books": []})
-    
+
     return jsonify({"books": books})
 
 @app.route('/api/get_book/<filename>')
@@ -143,7 +143,7 @@ def update_status(step, progress, preview=""):
     generation_status["progress"] = progress
     if preview:
         generation_status["current_preview"] = preview
-    
+
     # Calculate estimated completion time
     if generation_status["start_time"] and generation_status["progress"] > 0:
         start_time = datetime.fromisoformat(generation_status["start_time"])
@@ -152,7 +152,7 @@ def update_status(step, progress, preview=""):
         remaining = total_estimated - elapsed
         completion_time = datetime.now().timestamp() + remaining
         generation_status["estimated_completion"] = datetime.fromtimestamp(completion_time).isoformat()
-    
+
     socketio.emit('status_update', generation_status)
 
 def generate_book(params):
@@ -163,55 +163,56 @@ def generate_book(params):
         from agents import BookAgents
         from book_generator import BookGenerator
         from outline_generator import OutlineGenerator
-        
+
         # Override the log function in the modules
         import builtins
         original_print = builtins.print
-        
+
         def custom_print(*args, **kwargs):
             message = " ".join(str(arg) for arg in args)
             add_log_message(message)
             original_print(*args, **kwargs)
-        
+
         builtins.print = custom_print
-        
+
         # Set up environment variables
         os.environ["MIN_CHAPTER_LENGTH"] = str(params.get("min_chapter_length", 3000))
-        
+
         if params.get("provider") == "openai":
             os.environ["OPENAI_MODEL"] = params.get("model", "gpt-4")
         elif params.get("provider") == "anthropic":
             os.environ["ANTHROPIC_API_KEY"] = params.get("api_key", "")
-        
+
         # Get configuration
         update_status("Loading configuration", 5)
         agent_config = get_config()
-        
+
         # Override book settings
         agent_config["book_settings"]["min_chapter_length"] = params.get("min_chapter_length", 3000)
         agent_config["book_settings"]["enable_research"] = params.get("enable_research", True)
-        
+
         # Initial prompt
         initial_prompt = params.get("prompt", """
-Create a story in Frank Herbert's established writing style with these key elements:
-It is important that it has several key storylines that intersect and influence each other. The story should be set within the *Dune* universe, maintaining its deep philosophical undertones, political intrigue, and mythic weight. The protagonist is Jeff, a loyal warrior and strategist who walks beside Paul Atreides from his youth on Caladan to his rise as Muad'Dib. History forgets him, but he was there—the brother who was never named, the shadow who stood at the center of the storm.
+Write a novel about [your story idea].
 
-The novel follows Jeff's journey as he survives the fall of House Atreides, adapts to Fremen life, and plays a crucial but unseen role in Paul's ascension. His fate is intertwined with Paul's, but he is not bound by prophecy. The story explores themes of loyalty, fate, survival, and the hidden costs of empire-building.
+Include details about the main characters, setting, themes, and any specific elements you want in the story.
+
+The more details you provide, the better the generated story will match your vision.
 """)
-        
+
         # Create agents
         update_status("Creating agents", 10)
         num_chapters = params.get("num_chapters", 5)
         generation_status["total_chapters"] = num_chapters
-        
+
         outline_agents = BookAgents(agent_config)
         agents = outline_agents.create_agents(initial_prompt, num_chapters)
-        
+
         # Generate outline
         update_status("Generating outline", 15)
         outline_gen = OutlineGenerator(agents, agent_config)
         outline = outline_gen.generate_outline(initial_prompt, num_chapters)
-        
+
         # Save outline to status
         generation_status["outline"] = []
         for chapter in outline:
@@ -220,63 +221,64 @@ The novel follows Jeff's journey as he survives the fall of House Atreides, adap
                 "title": chapter["title"],
                 "prompt": chapter["prompt"][:200] + "..." if len(chapter["prompt"]) > 200 else chapter["prompt"]
             })
-        
+
         # Create book generator
         update_status("Initializing book generator", 20)
         book_agents = BookAgents(agent_config, outline)
         agents_with_context = book_agents.create_agents(initial_prompt, num_chapters)
         book_gen = BookGenerator(agents_with_context, agent_config, outline)
-        
+
         # Generate chapters
         base_progress = 20
         progress_per_chapter = (100 - base_progress) / num_chapters
-        
+
         # Override the _save_chapter method to get real-time updates
         original_save_chapter = book_gen._save_chapter
-        
+
         def custom_save_chapter(chapter_number, content):
             # Call the original method
             result = original_save_chapter(chapter_number, content)
-            
+
             # Update the UI
             generation_status["chapters_completed"] += 1
             progress = base_progress + (generation_status["chapters_completed"] * progress_per_chapter)
             update_status(f"Completed Chapter {chapter_number}", progress)
-            
+
             return result
-        
+
         book_gen._save_chapter = custom_save_chapter
-        
+
         # Override the generate_chapter method to get real-time updates
         original_generate_chapter = book_gen.generate_chapter
-        
+
         def custom_generate_chapter(chapter_number, prompt):
             # Update the UI
             generation_status["current_chapter"] = chapter_number
-            update_status(f"Generating Chapter {chapter_number}", 
+            update_status(f"Generating Chapter {chapter_number}",
                          base_progress + ((chapter_number - 1) * progress_per_chapter))
-            
+
             # Call the original method
             return original_generate_chapter(chapter_number, prompt)
-        
+
         book_gen.generate_chapter = custom_generate_chapter
-        
+
         # Generate the book
         book_gen.generate_book(outline)
-        
+
         # Create a combined book file
         update_status("Creating complete book file", 95)
         with open("book_output/complete_book.txt", "w", encoding="utf-8") as book_file:
             # Add title page
-            book_file.write("# THE SHADOW OF MUAD'DIB\n\n")
-            book_file.write("*The untold story of Jeff, friend of Paul Atreides*\n\n")
-            
+            book_title = params.get("book_title", "Generated Book")
+            book_file.write(f"# {book_title}\n\n")
+            book_file.write("*Generated by Agentic Author*\n\n")
+
             # Add table of contents
             book_file.write("## TABLE OF CONTENTS\n\n")
             for chapter in outline:
                 book_file.write(f"Chapter {chapter['chapter_number']}: {chapter['title']}\n")
             book_file.write("\n\n")
-            
+
             # Add each chapter
             for chapter in outline:
                 chapter_file = os.path.join("book_output", f"chapter_{chapter['chapter_number']:02d}.txt")
@@ -285,16 +287,16 @@ The novel follows Jeff's journey as he survives the fall of House Atreides, adap
                         chapter_content = f.read()
                         book_file.write(f"\n\n{chapter_content}\n\n")
                         book_file.write("\n" + "=" * 50 + "\n")
-        
+
         # Finalize
         update_status("Book generation complete", 100)
         add_log_message("Book generation completed successfully!")
         add_log_message(f"Generated {num_chapters} chapters")
         add_log_message("Book saved to book_output/complete_book.txt")
-        
+
         # Reset print function
         builtins.print = original_print
-        
+
     except Exception as e:
         add_log_message(f"Error during generation: {str(e)}")
         import traceback

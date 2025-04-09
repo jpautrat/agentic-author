@@ -1,6 +1,6 @@
-# Contributing to Advanced AI Book Generator
+# Contributing to Agentic Author
 
-Thank you for your interest in contributing to the Advanced AI Book Generator! This document provides guidelines and instructions for contributing to this project.
+Thank you for your interest in contributing to Agentic Author! This document provides guidelines and instructions for contributing to this project.
 
 ## Code of Conduct
 
@@ -41,8 +41,8 @@ We welcome suggestions for enhancements! Please create an issue with:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/advanced-ai-book-generator.git
-cd advanced-ai-book-generator
+git clone https://github.com/your-username/agentic-author.git
+cd agentic-author
 ```
 
 2. Create a virtual environment:
@@ -53,7 +53,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 3. Install dependencies:
 ```bash
-pip install -r requirements_updated.txt
+pip install -r requirements.txt
 ```
 
 ## Coding Standards
@@ -87,4 +87,4 @@ This project builds upon [Adam Larson's AI Book Writer](https://github.com/adamw
 
 If you have any questions about contributing, please create an issue with your question.
 
-Thank you for contributing to the Advanced AI Book Generator!
+Thank you for contributing to Agentic Author!
