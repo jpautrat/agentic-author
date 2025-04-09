@@ -1,0 +1,51 @@
+Starting Windows-compatible book generator...
+User parameters: {'num_chapters': 5, 'min_chapter_length': 2000, 'min_scenes': 3, 'model': 'gpt-3.5-turbo-16k'}
+OpenAI API key not found in environment variables
+Generating book outline...
+Successfully generated outline
+Saved outline to book_output/outline.txt
+
+==================== Chapter 1: Shadows of Caladan ====================
+Generating Chapter 1 using gpt-3.5-turbo-16k...
+WARNING: Chapter 1 is shorter than required (819 words vs 2000 minimum)
+Extending chapter to meet minimum length requirement...
+Extended chapter length: 1754 words
+[OK] Saved Chapter 1 to book_output\chapter_01.txt (1754 words)
+Completed 1/5 chapters
+
+==================== Chapter 2: The Desert's Embrace ====================
+Generating Chapter 2 using gpt-3.5-turbo-16k...
+WARNING: Chapter 2 is shorter than required (888 words vs 2000 minimum)
+Extending chapter to meet minimum length requirement...
+Extended chapter length: 1782 words
+[OK] Saved Chapter 2 to book_output\chapter_02.txt (1782 words)
+Completed 2/5 chapters
+
+==================== Chapter 3: Veiled Intrigues ====================
+Generating Chapter 3 using gpt-3.5-turbo-16k...
+WARNING: Chapter 3 is shorter than required (946 words vs 2000 minimum)
+Extending chapter to meet minimum length requirement...
+Extended chapter length: 1813 words
+[OK] Saved Chapter 3 to book_output\chapter_03.txt (1813 words)
+Completed 3/5 chapters
+
+==================== Chapter 4: The Hidden Hand ====================
+Generating Chapter 4 using gpt-3.5-turbo-16k...
+WARNING: Chapter 4 is shorter than required (880 words vs 2000 minimum)
+Extending chapter to meet minimum length requirement...
+Extended chapter length: 1605 words
+[OK] Saved Chapter 4 to book_output\chapter_04.txt (1605 words)
+Completed 4/5 chapters
+
+==================== Chapter 5: The Unseen Legacy ====================
+Generating Chapter 5 using gpt-3.5-turbo-16k...
+WARNING: Chapter 5 is shorter than required (745 words vs 2000 minimum)
+Extending chapter to meet minimum length requirement...
+Extended chapter length: 1367 words
+[OK] Saved Chapter 5 to book_output\chapter_05.txt (1367 words)
+Completed 5/5 chapters
+
+Creating combined book file...
+[OK] Created complete book file: book_output/complete_book.txt
+
+Book generation complete!

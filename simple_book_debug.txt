@@ -1,0 +1,16 @@
+Starting simple book generator...
+User parameters: {'num_chapters': 5, 'min_chapter_length': 2000, 'min_scenes': 3, 'model': 'gpt-3.5-turbo-16k'}
+OpenAI API key not found in environment variables
+Generating book outline...
+Successfully generated outline
+Saved outline to book_output/outline.txt
+
+==================== Chapter 1: The Shadows of Caladan ====================
+Generating Chapter 1 using gpt-3.5-turbo-16k...
+WARNING: Chapter 1 is shorter than required (714 words vs 2000 minimum)
+Extending chapter to meet minimum length requirement...
+Extended chapter length: 1424 words
+Error generating Chapter 1: 'charmap' codec can't encode character '\u2713' in position 0: character maps to <undefined>
+Traceback (most recent call last):
+Unhandled exception: 'charmap' codec can't encode character '\u2713' in position 138: character maps to <undefined>
+Traceback (most recent call last):

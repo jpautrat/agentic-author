@@ -1,0 +1,87 @@
+Starting Claude-powered book generator...
+User parameters: {'num_chapters': 10, 'min_chapter_length': 3000, 'min_scenes': 3, 'api_choice': 1, 'claude_model': 'claude-3-7-sonnet-20250219', 'openai_model': 'gpt-4'}
+Generating book outline...
+Using Anthropic Claude (claude-3-7-sonnet-20250219) for outline generation...
+Successfully generated outline
+Warning: Generated 0 chapters instead of 10
+Saved outline to book_output/outline.txt
+
+==================== Chapter 1: Chapter 1 ====================
+Generating Chapter 1 using Anthropic Claude (claude-3-7-sonnet-20250219)...
+Using max_tokens=4500 for claude-3-7-sonnet-20250219
+WARNING: Chapter 1 is shorter than required (2923 words vs 3000 minimum)
+Extending chapter to meet minimum length requirement...
+Using max_tokens=1577 for extension with claude-3-7-sonnet-20250219
+Extended chapter length: 3989 words
+[OK] Saved Chapter 1 to book_output\chapter_01.txt (3989 words)
+Completed 1/10 chapters
+
+==================== Chapter 2: Chapter 2 ====================
+Generating Chapter 2 using Anthropic Claude (claude-3-7-sonnet-20250219)...
+Using max_tokens=4500 for claude-3-7-sonnet-20250219
+[OK] Saved Chapter 2 to book_output\chapter_02.txt (3045 words)
+Completed 2/10 chapters
+
+==================== Chapter 3: Chapter 3 ====================
+Generating Chapter 3 using Anthropic Claude (claude-3-7-sonnet-20250219)...
+Using max_tokens=4500 for claude-3-7-sonnet-20250219
+[OK] Saved Chapter 3 to book_output\chapter_03.txt (3039 words)
+Completed 3/10 chapters
+
+==================== Chapter 4: Chapter 4 ====================
+Generating Chapter 4 using Anthropic Claude (claude-3-7-sonnet-20250219)...
+Using max_tokens=4500 for claude-3-7-sonnet-20250219
+[FAIL] Error generating Chapter 4: API call failed with status code 529: {"type":"error","error":{"type":"overloaded_error","message":"Overloaded"}}
+Traceback (most recent call last):
+  File "C:\Users\jpaut\Desktop\Tue ITIS 4010 AI Driven\ai-book-writer\claude_book_generator.py", line 356, in generate_chapter
+    chapter_content = call_claude_api(
+                      ^^^^^^^^^^^^^^^^
+  File "C:\Users\jpaut\Desktop\Tue ITIS 4010 AI Driven\ai-book-writer\claude_book_generator.py", line 157, in call_claude_api
+    raise Exception(f"API call failed with status code {response.status_code}: {response.text}")
+Exception: API call failed with status code 529: {"type":"error","error":{"type":"overloaded_error","message":"Overloaded"}}
+Failed to generate Chapter 4. Continuing with next chapter.
+
+==================== Chapter 5: Chapter 5 ====================
+Generating Chapter 5 using Anthropic Claude (claude-3-7-sonnet-20250219)...
+Using max_tokens=4500 for claude-3-7-sonnet-20250219
+[OK] Saved Chapter 5 to book_output\chapter_05.txt (3126 words)
+Completed 4/10 chapters
+
+==================== Chapter 6: Chapter 6 ====================
+Generating Chapter 6 using Anthropic Claude (claude-3-7-sonnet-20250219)...
+Using max_tokens=4500 for claude-3-7-sonnet-20250219
+WARNING: Chapter 6 is shorter than required (2949 words vs 3000 minimum)
+Extending chapter to meet minimum length requirement...
+Using max_tokens=1551 for extension with claude-3-7-sonnet-20250219
+Extended chapter length: 3976 words
+[OK] Saved Chapter 6 to book_output\chapter_06.txt (3976 words)
+Completed 5/10 chapters
+
+==================== Chapter 7: Chapter 7 ====================
+Generating Chapter 7 using Anthropic Claude (claude-3-7-sonnet-20250219)...
+Using max_tokens=4500 for claude-3-7-sonnet-20250219
+[OK] Saved Chapter 7 to book_output\chapter_07.txt (3140 words)
+Completed 6/10 chapters
+
+==================== Chapter 8: Chapter 8 ====================
+Generating Chapter 8 using Anthropic Claude (claude-3-7-sonnet-20250219)...
+Using max_tokens=4500 for claude-3-7-sonnet-20250219
+[OK] Saved Chapter 8 to book_output\chapter_08.txt (3036 words)
+Completed 7/10 chapters
+
+==================== Chapter 9: Chapter 9 ====================
+Generating Chapter 9 using Anthropic Claude (claude-3-7-sonnet-20250219)...
+Using max_tokens=4500 for claude-3-7-sonnet-20250219
+[OK] Saved Chapter 9 to book_output\chapter_09.txt (3139 words)
+Completed 8/10 chapters
+
+==================== Chapter 10: Chapter 10 ====================
+Generating Chapter 10 using Anthropic Claude (claude-3-7-sonnet-20250219)...
+Using max_tokens=4500 for claude-3-7-sonnet-20250219
+[OK] Saved Chapter 10 to book_output\chapter_10.txt (3094 words)
+Completed 9/10 chapters
+
+Creating combined book file...
+[OK] Created complete book file: book_output/complete_book.txt
+
+Book generation complete!

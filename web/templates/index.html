@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic Author</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="sidebar-header">
+                        <h5 class="text-light">Agentic Author</h5>
+                    </div>
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" data-bs-toggle="tab" data-bs-target="#dashboard">
+                                <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="tab" data-bs-target="#generate">
+                                <i class="bi bi-magic me-2"></i>Generate Book
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="tab" data-bs-target="#library">
+                                <i class="bi bi-book me-2"></i>Library
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="tab" data-bs-target="#settings">
+                                <i class="bi bi-gear me-2"></i>Settings
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="tab" data-bs-target="#about">
+                                <i class="bi bi-info-circle me-2"></i>About
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="tab-content">
+                    <!-- Dashboard Tab -->
+                    <div class="tab-pane fade show active" id="dashboard">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Dashboard</h1>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+                                <div class="btn-group me-2">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" id="refreshStatus">
+                                        <i class="bi bi-arrow-clockwise"></i> Refresh
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Status Cards -->
+                        <div class="row">
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Generation Status</h5>
+                                        <div class="status-indicator" id="statusIndicator">
+                                            <span class="badge bg-secondary">Idle</span>
+                                        </div>
+                                        <p class="card-text mt-2" id="currentStep">No active generation</p>
+                                        <div class="progress mt-3" id="progressContainer" style="display: none;">
+                                            <div class="progress-bar progress-bar-striped progress-bar-animated"
+                                                 id="progressBar" role="progressbar" style="width: 0%"></div>
+                                        </div>
+                                        <p class="text-muted mt-2" id="estimatedTime"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Current Chapter</h5>
+                                        <p class="card-text" id="chapterInfo">No chapter being generated</p>
+                                        <div class="d-flex justify-content-between">
+                                            <span id="chaptersCompleted">0</span>
+                                            <span>of</span>
+                                            <span id="totalChapters">0</span>
+                                        </div>
+                                        <div class="progress mt-2">
+                                            <div class="progress-bar bg-success" id="chapterProgress"
+                                                 role="progressbar" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Quick Actions</h5>
+                                        <div class="d-grid gap-2">
+                                            <button class="btn btn-primary" id="newBookBtn">
+                                                <i class="bi bi-plus-circle"></i> New Book
+                                            </button>
+                                            <button class="btn btn-danger" id="stopGenerationBtn" disabled>
+                                                <i class="bi bi-stop-circle"></i> Stop Generation
+                                            </button>
+                                            <button class="btn btn-secondary" id="viewLibraryBtn">
+                                                <i class="bi bi-collection"></i> View Library
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Preview and Log -->
+                        <div class="row">
+                            <div class="col-md-8 mb-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">Content Preview</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="content-preview" id="contentPreview">
+                                            <p class="text-muted">No content to preview</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <div class="card">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <h5 class="card-title mb-0">Activity Log</h5>
+                                        <button class="btn btn-sm btn-outline-secondary" id="clearLogBtn">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div class="log-container" id="logContainer">
+                                            <div class="log-entry">
+                                                <span class="log-time">00:00:00</span>
+                                                <span class="log-message">System initialized</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Outline -->
+                        <div class="row">
+                            <div class="col-12 mb-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">Book Outline</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover" id="outlineTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">#</th>
+                                                        <th scope="col">Title</th>
+                                                        <th scope="col">Description</th>
+                                                        <th scope="col">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="4" class="text-center text-muted">No outline available</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Generate Book Tab -->
+                    <div class="tab-pane fade" id="generate">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Generate New Book</h1>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <form id="generationForm">
+                                            <div class="mb-3">
+                                                <label for="bookTitle" class="form-label">Book Title</label>
+                                                <input type="text" class="form-control" id="bookTitle"
+                                                       placeholder="The Shadow of Muad'Dib">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="promptTextarea" class="form-label">Initial Prompt</label>
+                                                <textarea class="form-control" id="promptTextarea" rows="8" required>Create a story in Frank Herbert's established writing style with these key elements:
+It is important that it has several key storylines that intersect and influence each other. The story should be set within the *Dune* universe, maintaining its deep philosophical undertones, political intrigue, and mythic weight. The protagonist is Jeff, a loyal warrior and strategist who walks beside Paul Atreides from his youth on Caladan to his rise as Muad'Dib. History forgets him, but he was there—the brother who was never named, the shadow who stood at the center of the storm.
+
+The novel follows Jeff's journey as he survives the fall of House Atreides, adapts to Fremen life, and plays a crucial but unseen role in Paul's ascension. His fate is intertwined with Paul's, but he is not bound by prophecy. The story explores themes of loyalty, fate, survival, and the hidden costs of empire-building.</textarea>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <label for="numChapters" class="form-label">Number of Chapters</label>
+                                                    <input type="number" class="form-control" id="numChapters"
+                                                           min="1" max="20" value="5" required>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <label for="minChapterLength" class="form-label">Min Words per Chapter</label>
+                                                    <input type="number" class="form-control" id="minChapterLength"
+                                                           min="1000" max="50000" value="3000" required>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <label for="minScenes" class="form-label">Min Scenes per Chapter</label>
+                                                    <input type="number" class="form-control" id="minScenes"
+                                                           min="1" max="20" value="3" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="providerSelect" class="form-label">AI Provider</label>
+                                                    <select class="form-select" id="providerSelect" required>
+                                                        <option value="openai">OpenAI</option>
+                                                        <option value="anthropic">Anthropic Claude</option>
+                                                        <option value="local">Local LM Studio</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="modelSelect" class="form-label">Model</label>
+                                                    <select class="form-select" id="modelSelect" required>
+                                                        <!-- Options will be populated by JavaScript -->
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="mb-3" id="apiKeyContainer">
+                                                <label for="apiKey" class="form-label">API Key</label>
+                                                <input type="password" class="form-control" id="apiKey"
+                                                       placeholder="Enter your API key">
+                                                <div class="form-text">Your API key is only used for this session and is not stored.</div>
+                                            </div>
+
+                                            <div class="mb-3 form-check">
+                                                <input type="checkbox" class="form-check-input" id="enableResearch" checked>
+                                                <label class="form-check-label" for="enableResearch">Enable Web Research</label>
+                                            </div>
+
+                                            <div class="d-grid gap-2">
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="bi bi-magic"></i> Generate Book
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">Model Information</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="modelInfo">
+                                            <h6>GPT-4</h6>
+                                            <p><strong>Strengths:</strong> High-quality writing, complex reasoning, adherence to instructions</p>
+                                            <p><strong>Limitations:</strong> More expensive, slower generation</p>
+                                            <p><strong>Best For:</strong> High-quality books where cost is not a concern</p>
+                                            <p><strong>Approximate Cost:</strong> $0.03-$0.06 per 1K tokens</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">Tips</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">Be specific about the style, characters, and plot in your prompt</li>
+                                            <li class="list-group-item">For longer books, start with fewer chapters to test quality</li>
+                                            <li class="list-group-item">Enable web research for more accurate factual content</li>
+                                            <li class="list-group-item">Claude models are best for very long chapters</li>
+                                            <li class="list-group-item">Local models are free but may produce lower quality</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Library Tab -->
+                    <div class="tab-pane fade" id="library">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Book Library</h1>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+                                <div class="btn-group me-2">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" id="refreshLibrary">
+                                        <i class="bi bi-arrow-clockwise"></i> Refresh
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">Your Books</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover" id="booksTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Filename</th>
+                                                        <th scope="col">Date Modified</th>
+                                                        <th scope="col">Size</th>
+                                                        <th scope="col">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="4" class="text-center text-muted">No books found</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">Book Preview</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="bookPreview" class="book-preview">
+                                            <p class="text-muted">Select a book to preview</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Settings Tab -->
+                    <div class="tab-pane fade" id="settings">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Settings</h1>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">API Settings</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="apiSettingsForm">
+                                            <div class="mb-3">
+                                                <label for="openaiApiKey" class="form-label">OpenAI API Key</label>
+                                                <input type="password" class="form-control" id="openaiApiKey"
+                                                       placeholder="sk-...">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="anthropicApiKey" class="form-label">Anthropic API Key</label>
+                                                <input type="password" class="form-control" id="anthropicApiKey"
+                                                       placeholder="sk-ant-...">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="lmStudioUrl" class="form-label">LM Studio URL</label>
+                                                <input type="text" class="form-control" id="lmStudioUrl"
+                                                       value="http://localhost:1234/v1">
+                                            </div>
+                                            <div class="d-grid gap-2">
+                                                <button type="submit" class="btn btn-primary">Save API Settings</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">Generation Settings</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="generationSettingsForm">
+                                            <div class="mb-3">
+                                                <label for="outputDir" class="form-label">Output Directory</label>
+                                                <input type="text" class="form-control" id="outputDir"
+                                                       value="book_output">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="maxRetries" class="form-label">Max Retries</label>
+                                                <input type="number" class="form-control" id="maxRetries"
+                                                       min="1" max="10" value="3">
+                                            </div>
+                                            <div class="mb-3 form-check">
+                                                <input type="checkbox" class="form-check-input" id="autoOpenBrowser" checked>
+                                                <label class="form-check-label" for="autoOpenBrowser">
+                                                    Automatically open browser
+                                                </label>
+                                            </div>
+                                            <div class="d-grid gap-2">
+                                                <button type="submit" class="btn btn-primary">Save Generation Settings</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- About Tab -->
+                    <div class="tab-pane fade" id="about">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">About</h1>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h3>Agentic Author</h3>
+                                        <p class="lead">A sophisticated AI-powered book generation system that creates complete novels in the style of famous authors.</p>
+
+                                        <h4 class="mt-4">Key Features</h4>
+                                        <ul>
+                                            <li><strong>Multiple AI Provider Support</strong>: OpenAI, Anthropic Claude, and Local LLMs</li>
+                                            <li><strong>Customizable Book Parameters</strong>: Control chapter length, scenes, and more</li>
+                                            <li><strong>Enhanced Generation Quality</strong>: Improved prompting and automatic chapter extension</li>
+                                            <li><strong>Professional Output</strong>: Complete books with title page and table of contents</li>
+                                        </ul>
+
+                                        <h4 class="mt-4">Attribution</h4>
+                                        <p>This project builds upon <a href="https://github.com/adamwlarson/ai-book-writer" target="_blank">Adam Larson's AI Book Writer</a>. We extend our gratitude for his foundational work that made this enhanced version possible.</p>
+
+                                        <h4 class="mt-4">License</h4>
+                                        <p>This project is licensed under the MIT License.</p>
+
+                                        <div class="d-grid gap-2 d-md-flex justify-content-md-start mt-4">
+                                            <a href="https://github.com/jpautrat/agentic-author" target="_blank" class="btn btn-outline-primary">
+                                                <i class="bi bi-github"></i> GitHub Repository
+                                            </a>
+                                            <a href="https://github.com/adamwlarson/ai-book-writer" target="_blank" class="btn btn-outline-secondary">
+                                                <i class="bi bi-github"></i> Original Project
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h5 class="card-title mb-0">System Information</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                Version
+                                                <span class="badge bg-primary rounded-pill">1.0.0</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                Python
+                                                <span class="badge bg-secondary rounded-pill" id="pythonVersion">3.8+</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                AutoGen
+                                                <span class="badge bg-secondary rounded-pill">0.2.0+</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                Flask
+                                                <span class="badge bg-secondary rounded-pill">2.0.0+</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Book Preview Modal -->
+    <div class="modal fade" id="bookPreviewModal" tabindex="-1" aria-labelledby="bookPreviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookPreviewModalLabel">Book Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="fullBookPreview" class="book-content"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="downloadBookBtn">
+                        <i class="bi bi-download"></i> Download
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

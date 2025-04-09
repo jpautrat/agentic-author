@@ -1,0 +1,8 @@
+This directory will contain screenshots of the web UI.
+
+You should replace this file with actual screenshots of:
+1. The dashboard (dashboard.png)
+2. The book generation page (generate.png)
+3. The library page (library.png)
+
+These screenshots will make the README more visually appealing.

@@ -1,0 +1,58 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Environment variables
+.env
+.env.*
+!.env.template
+!.env.claude.template
+!.env.claude.token.limits
+!.env.claude.updated.template
+!.env.openai.template
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Generated content
+book_output/
+debug_log.txt
+*_debug.txt
+*.log
+
+# API keys and secrets
+*_key.txt
+*_secret.txt
+
+# Temporary files
+temp/
+tmp/
+.temp/
+.tmp/

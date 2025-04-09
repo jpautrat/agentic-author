@@ -1,18 +1,21 @@
 # Core dependencies
 autogen>=0.2.0
+openai>=1.0.0
+anthropic>=0.5.0
+python-dotenv>=0.19.0
+requests>=2.28.0
 typing>=3.7.4
 
 # Web research dependencies
 google-api-python-client>=2.0.0  # For Google Custom Search API
 wikipediaapi>=0.5.0  # For Wikipedia API access
-requests>=2.28.0  # For HTTP requests
+
+# Utility packages
+tqdm>=4.65.0  # For progress bars
+colorama>=0.4.6  # For colored terminal output
 
 # Development dependencies
 pytest>=7.0.0  # For testing
 black>=22.0.0  # For code formatting
 flake8>=4.0.0  # For linting
 mypy>=0.910  # For type checking
-
-# Optional dependencies
-tqdm>=4.65.0  # For progress bars
-python-dotenv>=0.19.0  # For environment variable management
