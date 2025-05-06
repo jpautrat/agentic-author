@@ -148,10 +148,6 @@ try:
     
     # Initial prompt with user parameters
     initial_prompt = f"""
-Create a story in Frank Herbert's established writing style with these key elements:
-It is important that it has several key storylines that intersect and influence each other. The story should be set within the *Dune* universe, maintaining its deep philosophical undertones, political intrigue, and mythic weight. The protagonist is Jeff, a loyal warrior and strategist who walks beside Paul Atreides from his youth on Caladan to his rise as Muad'Dib. History forgets him, but he was there—the brother who was never named, the shadow who stood at the center of the storm.
-
-The novel follows Jeff's journey as he survives the fall of House Atreides, adapts to Fremen life, and plays a crucial but unseen role in Paul's ascension. His fate is intertwined with Paul's, but he is not bound by prophecy. The story explores themes of loyalty, fate, survival, and the hidden costs of empire-building.
 
 Structure Requirements:
 - The book should have exactly {params['num_chapters']} chapters
@@ -159,15 +155,15 @@ Structure Requirements:
 - Each chapter must be at least {params['min_chapter_length']} words long
 
 Style Requirements:
-- Write in Frank Herbert's distinctive style from the Dune series
+- 
 - Use rich, descriptive prose with philosophical undertones
 - Include internal monologues that reveal character thoughts
 - Balance action with introspection
 - Incorporate political intrigue and power dynamics
 - Use sensory details to bring the world to life
-- Include occasional made-up quotes or excerpts as chapter epigraphs (similar to Herbert's style)
+- Include occasional made-up quotes or excerpts as chapter epigraphs 
 
-Each chapter must maintain focus on Jeff's relationship with Paul Atreides.
+
 """
     
     # Create agents
